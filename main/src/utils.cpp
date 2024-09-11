@@ -26,10 +26,11 @@ void showMenu(string user, string rol) {
     cout << "3) Cantidad de letras en un texto\n";
     cout << "4) Promedio y sumatoria de un vector\n";
     cout << "5) Calcular f(x)=5x*x+1/x\n";
+    cout << "6) Contar Palabras\n";
     if (rol == "Admin"){
-        cout << "6) Ingresar Usuario\n";
-        cout << "7) Listar Usuarios\n";
-        cout << "8) Eliminar Usuario\n";
+        cout << "7) Ingresar Usuario\n";
+        cout << "8) Listar Usuarios\n";
+        cout << "9) Eliminar Usuario\n";
     }
     cout << "-----------------------------------" << endl;
 }

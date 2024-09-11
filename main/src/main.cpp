@@ -9,6 +9,8 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <unistd.h>
+#include <sys/types.h>
 
 
 using namespace std;
@@ -22,9 +24,6 @@ int main(int argc, char *argv[]) {
 
 
     unordered_map<string, pair<string, string>> users = loadUsers("usuarios.csv");
-    for (auto const& x : users) {
-        cout << x.first << " " << x.second.first << " " << x.second.second << endl;
-    }
 
 
     int c;
@@ -91,6 +90,7 @@ int main(int argc, char *argv[]) {
     do {
         system("clear");
         char option;
+        pid_t pid;
         showMenu(user, rol);
         cout << "Ingrese una opción: ";
         cin >> option;
@@ -131,21 +131,31 @@ int main(int argc, char *argv[]) {
                 cout << "Promedio: " << result.second << endl;
                 cout << "-----------------------------------" << endl;
                 break;
-            }
+                }   
             case '5':
                 cout << "-----------------------------------" << endl;
                 cout << "f(" << num << ") = " << calculateFunction(num) << endl;
                 cout << "-----------------------------------" << endl;
                 break;
-               
             case '6':
+                cout << "-----------------------------------" << endl;
+                system("");
+                cout << "-----------------------------------" << endl;
+                break;
+            case '7':
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     string userIns, passIns, rolIns;
-                    cout << "Nombre de usuario: ";
-                    cin>>userIns;
-                    cout << "Contraseña del usuarios: ";
-                    cin>>passIns;
+                    do{
+                        cout << "Nombre de usuario: ";
+                        cin>>userIns;
+                        if (!isValidUsername(userIns)) cout << "El usuario debe ser solo letras y tener mas de 3 caracteres" << endl;
+                    }while(!isValidUsername(userIns));
+                    do{
+                        cout << "Contraseña del usuarios: ";
+                        cin>>passIns;
+                        if (!isValidPassword(passIns)) cout << "La contraseña debe ser solo numeros o letras y tener mas de 6 caracteres" << endl;
+                    }while(!isValidPassword(passIns));
                     cout << "Rol del usuario: ";
                     cin>>rolIns;
                     cout<< "Creando Usuario ..."<<endl;
@@ -156,7 +166,7 @@ int main(int argc, char *argv[]) {
                     cout << "Opción no válida.\n\n";
                     break;
                 }
-            case '7':
+            case '8':
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     showUsers(users);
@@ -167,7 +177,7 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 
-            case '8':
+            case '9':
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     string userDel;
