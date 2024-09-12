@@ -11,6 +11,8 @@ using namespace std;
  * @param text Texto a verificar.
  * @return true Si el texto es un palíndromo.
  * @return false Si el texto no es un palíndromo.
+ * 
+ * Un palíndromo es una palabra o frase que se lee igual de izquierda a derecha que de derecha a izquierda.
  */
 bool isPalindrome(string text){
     int text_size = text.length();
@@ -27,6 +29,8 @@ bool isPalindrome(string text){
  * 
  * @param text Texto a analizar.
  * @return int Cantidad de vocales en el texto.
+ * 
+ * Cuenta la cantidad de vocales en un texto.
  */
 int countVowels(string text){
     int vowels = 0;
@@ -46,6 +50,8 @@ int countVowels(string text){
  * 
  * @param text Texto a analizar.
  * @return int Cantidad de letras en el texto.
+ * 
+ * Cuenta la cantidad de letras en un texto.
  */
 int countLetters(string text){
     int letters = 0;
@@ -61,6 +67,8 @@ int countLetters(string text){
  * 
  * @param numbers Vector de números.
  * @return pair<int, double> Sumatoria y promedio de los números.
+ * 
+ * Calcula la sumatoria y el promedio de un vector de números.
  */
 pair<int, double> sumAndAverage(const vector<int>& numbers){
     int sum = 0;
@@ -75,6 +83,8 @@ pair<int, double> sumAndAverage(const vector<int>& numbers){
  * 
  * @param n Valor de x.
  * @return double Valor de la función.
+ * 
+ * Calcula el valor de la función f(x) = 5x^2 + 1/x.
  */
 double calculateFunction(double n){
     return 5*n*n + 1/n;
@@ -105,7 +115,16 @@ void deleteUser(string user, string rol, unordered_map<string, pair<string, stri
 }
 
 
-
+/**
+ * @brief Crea un usuario.
+ * 
+ * @param user Nombre de usuario.
+ * @param pass Contraseña.
+ * @param rol Rol del usuario.
+ * @param users Mapa con los usuarios.
+ * 
+ * Crea un usuario y lo guarda en el archivo de usuarios.
+ */
 void createUser(string user, string pass, string rol, unordered_map<string, pair<string, string>>& users, string path){
     if (users.find(user) == users.end()){
         users[user] = make_pair(pass, rol);
@@ -122,6 +141,13 @@ void createUser(string user, string pass, string rol, unordered_map<string, pair
     return;
 }
 
+/**
+ * @brief Muestra los usuarios.
+ * 
+ * @param users Mapa con los usuarios.
+ * 
+ * Muestra los usuarios en el archivo de usuarios.
+ */
 void showUsers(unordered_map<string, pair<string, string>> users){
     cout<< "Lista de Usuarios : "<<endl;
     for (const auto& par : users) {

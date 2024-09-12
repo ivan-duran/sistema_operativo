@@ -1,10 +1,10 @@
 # Variables
 CXX = g++
 CXXFLAGS = -I./include -Wall -std=c++11
-SRC = ./src/main.cpp ./src/options.cpp ./src/utils.cpp
+SRC = ./src/count_words.cpp ./src/options.cpp ./src/utils.cpp
 OBJ_DIR = ./object
 OBJ = $(SRC:./src/%.cpp=$(OBJ_DIR)/%.o)
-TARGET = main  # Cambiado para que el ejecutable se coloque en una 
+TARGET = count_words
 
 # Reglas
 all: $(TARGET)

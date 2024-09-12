@@ -13,10 +13,15 @@ using namespace std;
 
 /**
  * @brief Muestra el menú de opciones disponibles para el usuario.
+ * 
+ * @param user Nombre de usuario.
+ * @param rol Rol del usuario.
+ * 
+ * Muestra el menú de opciones disponibles para el usuario, dependiendo de su rol.
  */
 void showMenu(string user, string rol) {
     pid_t pid = getpid();
-    cout << "akavaelnombredelprogramapokuliao (PID = " << pid <<")"<< endl;
+    cout << "MAIN (PID = " << pid <<")"<< endl;
     cout << "Nombre de Usuario: " << user << endl;
     cout << "Rol: " << rol << endl;    
     cout << "-----------------------------------" << endl;
@@ -105,6 +110,8 @@ vector<int> splitVec(string vec_str){
  * @param pass Contraseña a verificar.
  * @return true Si el usuario y contraseña son válidos.
  * @return false Si el usuario y contraseña no son válidos.
+ * 
+ * Verifica si un usuario y contraseña son válidos comparando con un mapa de usuarios y contraseñas.
  */
 bool veryfyUser(unordered_map<string, pair<string,string>> users, string user, string pass){
     if (users[user].first == pass) return true;
@@ -166,6 +173,7 @@ bool isValidVec(string vector){
  * @param delimiter caracter el cual se usara de separador
  * @return vector<int> con el string dividido segun el separador.
  * 
+ * Divide un string en numeros separados por un delimitador.
  */
 vector<int> splitInt(string s, char delimiter) {
     vector<int> tokens;
@@ -177,6 +185,18 @@ vector<int> splitInt(string s, char delimiter) {
     return tokens;
 }
 
+/**
+ * @brief Verifica si se ingresaron todos los parametros necesarios.
+ * 
+ * @param hasUser Si se ingreso el usuario.
+ * @param hasPass Si se ingreso la contraseña.
+ * @param hasText Si se ingreso el texto.
+ * @param hasVector Si se ingreso el vector.
+ * @param hasNumber Si se ingreso el numero.
+ * @return true si se ingresaron todos los parametros, false sino.
+ * 
+ * Verifica si se ingresaron todos los parametros necesarios para realizar una operacion.
+ */
 bool areParamsProvided(bool hasUser, bool hasPass, bool hasText, bool hasVector, bool hasNumber){
     if (!hasUser) {
         cout << "Error: Se debe ingresar el usuario (-u)." << endl;

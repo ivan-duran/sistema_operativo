@@ -1,0 +1,12 @@
+rap; 1
+boll; 1
+tetris; 1
+tema; 1
+ha; 1
+yea; 1
+perdonen; 1
+despues; 1
+del; 2
+kamehame; 1
+dargon; 1
+viene; 1

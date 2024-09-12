@@ -13,6 +13,8 @@
 #include <sys/types.h>
 
 
+
+
 using namespace std;
 
 int main(int argc, char *argv[]) {    
@@ -22,8 +24,9 @@ int main(int argc, char *argv[]) {
     double num;
     bool hasUser = false, hasPass = false, hasText = false, hasVector = false, hasNumber = false;
 
-
-    unordered_map<string, pair<string, string>> users = loadUsers("usuarios.csv");
+    dotenv::init("path_db.env");
+    string path_db = getenv("PATH_DB");
+    unordered_map<string, pair<string, string>> users = loadUsers(path_db);
 
 
     int c;
@@ -90,7 +93,6 @@ int main(int argc, char *argv[]) {
     do {
         system("clear");
         char option;
-        pid_t pid;
         showMenu(user, rol);
         cout << "Ingrese una opción: ";
         cin >> option;
@@ -139,7 +141,7 @@ int main(int argc, char *argv[]) {
                 break;
             case '6':
                 cout << "-----------------------------------" << endl;
-                system("");
+                system("cd .. ; cd words_menu ; ./count_words");
                 cout << "-----------------------------------" << endl;
                 break;
             case '7':
