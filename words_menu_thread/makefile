@@ -1,10 +1,10 @@
 # Variables
 CXX = g++
-CXXFLAGS = -I./include -Wall -std=c++11
-SRC = ./src/count_words.cpp ./src/options.cpp ./src/utils.cpp
+CXXFLAGS = -I./include -Wall -std=c++17
+SRC = ./src/count_words_thread.cpp ./src/options.cpp ./src/utils.cpp
 OBJ_DIR = ./object
 OBJ = $(SRC:./src/%.cpp=$(OBJ_DIR)/%.o)
-TARGET = count_words
+TARGET = count_words_thread
 
 # Reglas
 all: $(TARGET)

@@ -28,6 +28,14 @@ int main(int argc, char *argv[]) {
     string path_db = getenv("PATH_DB");
     unordered_map<string, pair<string, string>> users = loadUsers(path_db);
 
+    //words_menu_thread
+    string extension_thread = getenv("EXTEN_THREAD");
+    string path_in_thread = getenv("PATH_INPUT_THREAD");
+    string path_out_thread = getenv("PATH_OUTPUT_THREAD");
+    string path_map = getenv("PATH_FILES_MAP");
+    string path_stop = getenv("PATH_STOP_WORDS");
+    string path_clean = getenv("PATH_CLEAN");
+
     
 
 
@@ -94,16 +102,16 @@ int main(int argc, char *argv[]) {
 
     do {
         system("clear");
-        char option;
+        int option;
         showMenu(user, rol);
         cout << "Ingrese una opción: ";
         cin >> option;
         system("clear"); 
         switch (option) {
-            case '0':
+            case 0:
                 cout << "Saliendo..." << endl;
                 return 0;
-            case '1':
+            case 1:
                 cout << "-----------------------------------" << endl;
                 cout << "La palabra: " << text << endl;
                 if (isPalindrome(text))
@@ -112,17 +120,17 @@ int main(int argc, char *argv[]) {
                     cout << "No es palíndromo." << endl;
                 cout << "-----------------------------------" << endl;
                 break;
-            case '2':
+            case 2:
                 cout << "-----------------------------------" << endl;
                 cout << "La palabra: " << text <<"\ntiene " << countVowels(text) << " vocales." << endl;
                 cout << "-----------------------------------" << endl;
                 break;
-            case '3':
+            case 3:
                 cout << "-----------------------------------" << endl;
                 cout << "La palabra: " << text <<"\ntiene " << countLetters(text) << " letras." << endl;
                 cout << "-----------------------------------" << endl;
                 break;
-            case '4': {
+            case 4: {
                 cout << "-----------------------------------" << endl;
                 pair<int, double> result = sumAndAverage(vec_num);
                 cout << "Vector: (";
@@ -136,17 +144,17 @@ int main(int argc, char *argv[]) {
                 cout << "-----------------------------------" << endl;
                 break;
                 }   
-            case '5':
+            case 5:
                 cout << "-----------------------------------" << endl;
                 cout << "f(" << num << ") = " << calculateFunction(num) << endl;
                 cout << "-----------------------------------" << endl;
                 break;
-            case '6':
+            case 6:
                 cout << "-----------------------------------" << endl;
                 system("cd .. ; cd words_menu ; ./count_words");
                 cout << "-----------------------------------" << endl;
                 break;
-            case '7':
+            case 7:
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     string userIns, passIns, rolIns;
@@ -170,7 +178,7 @@ int main(int argc, char *argv[]) {
                     cout << "Opción no válida.\n\n";
                     break;
                 }
-            case '8':
+            case 8:
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     showUsers(users);
@@ -181,7 +189,7 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 
-            case '9':
+            case 9:
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     string userDel;
@@ -195,11 +203,10 @@ int main(int argc, char *argv[]) {
                     cout << "Opción no válida.\n\n";
                     break;
                 }
-            case '10':
+            case 10:
                 cout << "-----------------------------------" << endl;
-                parallelWordCount();
-
-                system(" -i "  {path_in_thread}  "-o   {path_out_thread}  "-e" + extension "-m":s:c:);
+                string aux_path = "cd .. ; cd words_menu_thread ; ./count_words_thread -i" + path_in_thread + " -o" + path_out_thread + " -e" + extension_thread + " -m" + path_map + " -s" + path_stop + " -c" + path_clean;
+                system(aux_path.c_str());
                 cout << "-----------------------------------" << endl;
                 break;
         }

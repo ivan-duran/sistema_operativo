@@ -1,5 +1,4 @@
 pepe;elsech;Admin
-IvanDrago;pichulita123;Admin
 BobJohnson;helloWorld;Usuario Generico
 EveMartinez;mySecret;Usuario Generico
 HenryWalker;letmein;Usuario Generico

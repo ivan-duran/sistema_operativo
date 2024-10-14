@@ -18,6 +18,7 @@
 
 
 using namespace std;
+namespace fs = std::filesystem;
 
 /**
  * @brief Verifica si un texto es un palíndromo.
@@ -48,7 +49,7 @@ string readFile(const string& path) {
  */    
 vector<pair<string, string>> readFolder(const string& carpetaPath,string exten) {
     vector<pair<string, string>> todosLosArchivos;
-    for (const auto& entry : std::__fs::filesystem::directory_iterator(carpetaPath)) {
+    for (const auto& entry : std::filesystem::directory_iterator(carpetaPath)) {
         string pathArchivo = entry.path().string();
         
         if (entry.path().extension().string()== exten){
@@ -130,69 +131,53 @@ vector<pair<string, int>> fileOut(const vector<pair<string, string>>& textos, co
 //opcion 10    
 
 mutex mtx;  // Para proteger la salida al archivo
-set<string> stopWords;  // Set de palabras de parada
-
+// Función para contar las palabras de un archivo y guardar el resultado en un archivo de salida
 void countWordsInFile(const string& filepath, const string& outputDir) {
     ifstream file(filepath);
     unordered_map<string, int> wordCount;
     string word;
 
-    // Leer y contar las palabras del archivo
+    // Leer cada palabra del archivo y hacer el conteo
     while (file >> word) {
-        // Limpiar las palabras de parada (stop words)
-        if (stopWords.find(word) == stopWords.end()) {
-            wordCount[word]++;
-        }
+        wordCount[word]++;
     }
     file.close();
 
-    // Bloquear el acceso para escribir en los archivos de salida
+    // Bloquear el acceso a la escritura en los archivos de salida
     {
         lock_guard<mutex> guard(mtx);
-        string outputFilename = outputDir + "/" + std::filesystem::path(filepath).filename().string();
+        string outputFilename = outputDir + "/" + fs::path(filepath).filename().string();  // Mantener el mismo nombre del archivo
         ofstream outFile(outputFilename);
         for (const auto& entry : wordCount) {
-            outFile << entry.first << ": " << entry.second << endl;
+            outFile << entry.first << ": " << entry.second << endl;  // Escribir la palabra y su conteo en el archivo
         }
         outFile.close();
     }
 }
 
-void parallelWordCount() {
-    // Obtener las variables de entorno
-    string inputDir = getenv("CARPETA_ENTRADA");
-    string outputDir = getenv("CARPETA_SALIDA");
-    int maxThreads = stoi(getenv("CANTIDAD_THREAD"));
-    string stopWordsPath = getenv("STOP_WORD");
-
-    // Cargar las palabras de parada
-    ifstream stopWordsFile(stopWordsPath);
-    string stopWord;
-    while (stopWordsFile >> stopWord) {
-        stopWords.insert(stopWord);
-    }
-    stopWordsFile.close();
-
+// Función para hacer el conteo de palabras en paralelo usando varios archivos
+void parallelWordCount(const string& inputDir, const string& outputDir, int maxThreads) {
     // Vector para guardar los hilos
     vector<thread> threads;
     vector<string> filepaths;
 
-    // Leer los archivos del directorio de entrada
-    for (const auto& entry : filesystem::directory_iterator(inputDir)) {
+    // Leer todos los archivos en la carpeta de entrada
+    for (const auto& entry : fs::directory_iterator(inputDir)) {
         if (entry.is_regular_file()) {
             filepaths.push_back(entry.path().string());
         }
     }
 
-    // Crear los hilos para contar las palabras en los archivos
+    // Crear los hilos para procesar cada archivo
     for (int i = 0; i < filepaths.size(); ++i) {
+        // Limitar el número de hilos activos según la variable maxThreads
         if (threads.size() >= maxThreads) {
             for (auto& t : threads) {
-                t.join();
+                t.join();  // Esperar a que los hilos terminen
             }
-            threads.clear();
+            threads.clear();  // Limpiar el vector de hilos después de que hayan terminado
         }
-        threads.push_back(thread(countWordsInFile, filepaths[i], outputDir));
+        threads.push_back(thread(countWordsInFile, filepaths[i], outputDir));  // Crear un hilo para procesar el archivo
     }
 
     // Unir los hilos restantes
@@ -200,28 +185,25 @@ void parallelWordCount() {
         t.join();
     }
 
-    cout << "Conteo paralelo con hilos completado." << endl;
-        
+    cout << "Conteo paralelo completado." << endl;
 }
 
-
-void mapa_archivo(string& path_map, string& exten, string& path_in){
+void mapa_archivo(const string& path_map,  const string& exten, const string& path_in) {
     int id = 0 ;
     ofstream archivo(path_map);
-    for (const auto& entry : std::__fs::filesystem::directory_iterator(path_in)) {
+    for (const auto& entry : std::filesystem::directory_iterator(path_in)) {
         string pathArchivo = entry.path().string();
-        
-        if (entry.path().extension().string()== exten){
+        if (entry.path().extension().string()== "."+exten){
             string titulo = entry.path().stem().string();
             archivo << titulo << ", " << id<< endl; 
             id++;
         }
     }
+    archivo.close();
 
 }
 
 //STOP_WORDS
-
 /**
  * @brief Carga las palabras de parada desde un archivo en un conjunto (set).
  * 
@@ -293,36 +275,61 @@ void processFileWithStopWords(const string& inputFile, const string& outputFile,
     outFile.close();
 }
 
-void stop_words(const string& stopWordsPath, const string& path_in, const string& path_map, const string& exten,const string& path_clean){
+/**
+ * @brief Procesa archivos de una carpeta, elimina palabras de parada y los guarda en una carpeta de salida.
+ * 
+ * @param stopWordsPath Ruta al archivo de palabras de parada.
+ * @param path_in Carpeta de entrada con los archivos a limpiar.
+ * @param path_map Ruta del archivo de mapeo de nombres e índices.
+ * @param exten Extensión de los archivos.
+ * @param path_clean Carpeta donde se guardarán los archivos limpiados.
+ */
+void stop_words(const string& stopWordsPath, const string& path_in, const string& path_map, const string& exten, const string& path_clean) {
+    // Cargar las palabras de parada
     unordered_set<string> stopWords = loadStopWords(stopWordsPath);
     unordered_map<string, int> map_file;
 
+    // Leer el archivo de mapeo y llenar el map con el nombre del archivo y su índice
     ifstream file(path_map);
     string line;
     while (getline(file, line)) {
-        size_t last_comma = line.find_last_of(',');  // Encontrar la última coma
-        // Extraer el nombre del libro (parte antes de la última coma)
+        size_t last_comma = line.find_last_of(',');
         string book_name = line.substr(0, last_comma);
         book_name.erase(book_name.find_last_not_of(" ,") + 1);  // Eliminar espacios y comas finales
-
-        // Extraer el índice (parte después de la última coma)
         string index_str = line.substr(last_comma + 1);
-        index_str.erase(index_str.find_last_not_of(" ") + 1);  // Eliminar espacios adicionales 
-
+        index_str.erase(index_str.find_last_not_of(" ") + 1);  // Eliminar espacios adicionales
         int index = stoi(index_str);  // Convertir el índice a entero
 
-        // Insertar el nombre del libro y el índice en el unordered_map
         map_file[book_name] = index;
     }
-    int id;
 
-    for (const auto& entry : std::__fs::filesystem::directory_iterator(path_in)) {
+    // Crear la carpeta de salida si no existe
+    if (!fs::exists(path_clean)) {
+        fs::create_directory(path_clean);
+    }
+
+    // Procesar los archivos de la carpeta de entrada
+    for (const auto& entry : fs::directory_iterator(path_in)) {
         string pathFile = entry.path().string();
-        id = map_file[entry.path().stem().string()];
-        string path_output = path_clean + "/" + to_string(id) + "." + exten;
-        
-        if (entry.path().extension().string() == exten){
-            processFileWithStopWords(pathFile, path_output,stopWords);
+        string fileName = entry.path().stem().string();  // Obtener solo el nombre del archivo sin la extensión
+        string extension = entry.path().extension().string();
+
+        // Verificar si la extensión es la correcta
+        if (extension == "." + exten) {
+            // Verificar si el archivo tiene un índice en el mapa
+            if (map_file.find(fileName) != map_file.end()) {
+                int id = map_file[fileName];
+                string path_output = path_clean + "/" + to_string(id) + "." + exten;
+
+                // Mostrar información de depuración
+                cout << "Procesando archivo: " << fileName << " con id: " << id << endl;
+                cout << "Guardando en: " << path_output << endl;
+
+                // Procesar el archivo limpiando las palabras de parada
+                processFileWithStopWords(pathFile, path_output, stopWords);
+            } else {
+                cout << "Advertencia: El archivo " << fileName << " no tiene índice en el mapa." << endl;
+            }
         }
     }
 }

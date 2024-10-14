@@ -1,0 +1,13 @@
+lo: 1
+rap: 1
+dargon: 1
+viene: 1
+boll: 1
+tetris: 1
+tema: 1
+del: 2
+despues: 1
+ha: 1
+kamehame: 1
+perdonen: 1
+yea: 1

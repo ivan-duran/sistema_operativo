@@ -29,13 +29,13 @@ make
 Una vez que el programa esté compilado, desde la carpeta raiz, se ejecuta con el siguiente comando:
 
 ```
-./prog -u <usuario> -p <contraseña> -t <texto> -v <vector> -n <número>
+./main -u <usuario> -p <contraseña> -t <texto> -v <vector> -n <número>
 ```
 
 Ejemplo:
 
 ```
-./prog -u usuario -p contrasena -t palabra -v 10\;12\;20\;300 -n 5
+./main -u usuario -p contrasena -t palabra -v 10\;12\;20\;300 -n 5
 ```
 
 ## 4. Parámetros

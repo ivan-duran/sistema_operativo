@@ -29,7 +29,7 @@ void showMenu(){
  * Verifica si un directorio existe.
  */
 bool directoryExists(const string& path) {
-    return __fs::filesystem::exists(path) && __fs::filesystem::is_directory(path);
+    return filesystem::exists(path) && filesystem::is_directory(path);
 }
 
 /**
@@ -41,7 +41,7 @@ bool directoryExists(const string& path) {
  * Verifica si un directorio está vacío.
  */
 bool hasFilesWithExtension(const string& path, const string& exten) {
-    for (const auto& entry : __fs::filesystem::directory_iterator(path)) {
+    for (const auto& entry : filesystem::directory_iterator(path)) {
         if (entry.path().extension().string() == exten) {
             return true;
         }
@@ -49,5 +49,5 @@ bool hasFilesWithExtension(const string& path, const string& exten) {
     return false;
 }
 
-//mapeando mapa_archivos.txt
+
 
