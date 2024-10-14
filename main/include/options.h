@@ -15,5 +15,9 @@ void showUsers(std::unordered_map<std::string, std::pair<std::string, std::strin
 void createUser(std::string user, std::string pass, std::string rol, std::unordered_map<std::string, std::pair<std::string, std::string>>& users, std::string path);
 void deleteUser(std::string user, std::string rol, std::unordered_map<std::string, std::pair<std::string, std::string>>& users, std::string path);
 
+//borrar despues
+//void countWordsInFile(const std::string& filepath, const std::string& outputDir) 
+
+
 
 #endif

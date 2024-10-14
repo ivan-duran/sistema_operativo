@@ -37,6 +37,7 @@ void showMenu(string user, string rol) {
         cout << "8) Listar Usuarios\n";
         cout << "9) Eliminar Usuario\n";
     }
+    cout << "10) Conteo paralelo con threads\n";
     cout << "-----------------------------------" << endl;
 }
 

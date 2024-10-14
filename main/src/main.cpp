@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
     string path_db = getenv("PATH_DB");
     unordered_map<string, pair<string, string>> users = loadUsers(path_db);
 
+    
+
 
     int c;
     while ((c = getopt(argc, argv, "u:p:t:v:n:")) != -1) {
@@ -193,6 +195,13 @@ int main(int argc, char *argv[]) {
                     cout << "Opción no válida.\n\n";
                     break;
                 }
+            case '10':
+                cout << "-----------------------------------" << endl;
+                parallelWordCount();
+
+                system(" -i "  {path_in_thread}  "-o   {path_out_thread}  "-e" + extension "-m":s:c:);
+                cout << "-----------------------------------" << endl;
+                break;
         }
         do {
             cout << "¿Desea realizar otra operación? (s/n): ";
