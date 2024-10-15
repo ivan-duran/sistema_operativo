@@ -32,12 +32,13 @@ void showMenu(string user, string rol) {
     cout << "4) Promedio y sumatoria de un vector\n";
     cout << "5) Calcular f(x)=5x*x+1/x\n";
     cout << "6) Contar Palabras\n";
+    cout << "7) Conteo Paralelo Con Threads\n";
+    cout << "8) Crear Indice Invertido\n";
     if (rol == "Admin"){
-        cout << "7) Ingresar Usuario\n";
-        cout << "8) Listar Usuarios\n";
-        cout << "9) Eliminar Usuario\n";
+        cout << "9) Ingresar Usuario\n";
+        cout << "10) Listar Usuarios\n";
+        cout << "11) Eliminar Usuario\n";
     }
-    cout << "10) Conteo paralelo con threads\n";
     cout << "-----------------------------------" << endl;
 }
 

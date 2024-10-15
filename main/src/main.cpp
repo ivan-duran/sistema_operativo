@@ -17,27 +17,35 @@
 
 using namespace std;
 
+//ejecucion = ./main -u IsaiasCabrera -p qwertyui -t "haiah" -v 1\;2\;3\;4 -n 3
+
 int main(int argc, char *argv[]) {    
     system("clear");
     string user, pass, rol, text, str_vec;
     vector<int> vec_num;
     double num;
-    bool hasUser = false, hasPass = false, hasText = false, hasVector = false, hasNumber = false;
+    bool hasUser = false, hasPass = false, hasText = false, hasVector = false, hasNumber = false, passThread = false;
 
     dotenv::init("path_db.env");
     string path_db = getenv("PATH_DB");
     unordered_map<string, pair<string, string>> users = loadUsers(path_db);
-
-    //words_menu_thread
+    
     string extension_thread = getenv("EXTEN_THREAD");
     string path_in_thread = getenv("PATH_INPUT_THREAD");
     string path_out_thread = getenv("PATH_OUTPUT_THREAD");
     string path_map = getenv("PATH_FILES_MAP");
     string path_stop = getenv("PATH_STOP_WORDS");
     string path_clean = getenv("PATH_CLEAN");
-
-    
-
+    string program_count_words = getenv("PROGRAM_COUNT_WORDS");
+    string program_count_words_thread = getenv("PROGRAM_COUNT_WORDS_THREAD");
+    string program_inverted_index = getenv("PROGRAM_INVERTED_INDEX");
+    string path_inverted_index = getenv("PATH_INVERTED_INDEX");
+    string threads = getenv("THREADS");
+    cout << threads << endl;
+    if(path_in_thread == path_out_thread){
+        cout << "ERROR: Las rutas de entrada y salida no pueden ser iguales." << endl;
+        return 1;
+    }
 
     int c;
     while ((c = getopt(argc, argv, "u:p:t:v:n:")) != -1) {
@@ -151,10 +159,32 @@ int main(int argc, char *argv[]) {
                 break;
             case 6:
                 cout << "-----------------------------------" << endl;
-                system("cd .. ; cd words_menu ; ./count_words");
+                system(program_count_words.c_str());
                 cout << "-----------------------------------" << endl;
                 break;
-            case 7:
+            case 7: {
+                cout << "-----------------------------------" << endl;
+                string aux_path = program_count_words_thread + " -i " + path_in_thread + " -o " + path_out_thread + " -e " + extension_thread + " -m " + path_map + " -s " + path_stop + " -c " + path_clean + " -t " + threads;
+                system(aux_path.c_str());
+                passThread = true;
+                cout << "-----------------------------------" << endl;
+                break;
+            }
+            case 8: {
+                if (passThread){
+                cout << "-----------------------------------" << endl;
+                string aux_path = program_inverted_index + " -o " + path_out_thread + " -i " + path_inverted_index + " -e " + extension_thread;
+                system(aux_path.c_str());
+                cout << "-----------------------------------" << endl;
+                }
+                else{
+                    cout << "-----------------------------------" << endl;
+                    cout << "Se debe ejecutar la opcion 7 antes de ejecutar la opcion 8." << endl;
+                    cout << "-----------------------------------" << endl;
+                }
+                break;
+            }
+            case 9:
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     string userIns, passIns, rolIns;
@@ -168,17 +198,23 @@ int main(int argc, char *argv[]) {
                         cin>>passIns;
                         if (!isValidPassword(passIns)) cout << "La contraseña debe ser solo numeros o letras y tener mas de 6 caracteres" << endl;
                     }while(!isValidPassword(passIns));
-                    cout << "Rol del usuario: ";
-                    cin>>rolIns;
+                    do {
+                        cout << "Rol del usuario: 1. Admin 2. Usuario Generico" << endl;
+                        cin>>rolIns;
+                        if (rolIns == "1") rolIns = "Admin";
+                        else if (rolIns == "2") rolIns = "User";
+                        else cout << "Opción no válida.\n\n";
+                    } while (rolIns != "Admin" && rolIns != "User");
                     cout<< "Creando Usuario ..."<<endl;
                     createUser(userIns, passIns, rolIns, users, "usuarios.csv");
                     cout << "-----------------------------------" << endl;
                     break;
+                break;
                 }else {
                     cout << "Opción no válida.\n\n";
                     break;
                 }
-            case 8:
+            case 10:
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     showUsers(users);
@@ -189,7 +225,7 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 
-            case 9:
+            case 11:
                 if (rol == "Admin"){
                     cout << "-----------------------------------" << endl;
                     string userDel;
@@ -203,12 +239,6 @@ int main(int argc, char *argv[]) {
                     cout << "Opción no válida.\n\n";
                     break;
                 }
-            case 10:
-                cout << "-----------------------------------" << endl;
-                string aux_path = "cd .. ; cd words_menu_thread ; ./count_words_thread -i" + path_in_thread + " -o" + path_out_thread + " -e" + extension_thread + " -m" + path_map + " -s" + path_stop + " -c" + path_clean;
-                system(aux_path.c_str());
-                cout << "-----------------------------------" << endl;
-                break;
         }
         do {
             cout << "¿Desea realizar otra operación? (s/n): ";

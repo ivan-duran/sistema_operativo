@@ -1,6 +1,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 #ifndef OPTIONS_H
 #define OPTIONS_H 
